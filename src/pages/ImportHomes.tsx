@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import type { City } from '../types'
 
 interface ParsedHome {
   address: string
@@ -49,7 +48,7 @@ function ImportHomes() {
       }
 
       // Parse CSV (assuming format: address, street_name, city_name, subdivision_name, notes)
-      const headers = lines[0].split(',').map((h) => h.trim().toLowerCase())
+      // Skip header row and parse data
       const homes: ParsedHome[] = []
 
       for (let i = 1; i < lines.length; i++) {
@@ -100,7 +99,7 @@ function ImportHomes() {
       if (citiesError) throw citiesError
 
       const cityMap = new Map<string, string>()
-      cities?.forEach((city: City) => {
+      cities?.forEach((city) => {
         cityMap.set(city.name.toLowerCase(), city.id)
       })
 
