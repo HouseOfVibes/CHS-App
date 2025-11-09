@@ -41,6 +41,9 @@ CREATE TABLE homes (
     date_visited DATE NOT NULL DEFAULT CURRENT_DATE,
     source TEXT DEFAULT 'manual' CHECK (source IN ('manual', 'corelogic')),
     corelogic_id TEXT UNIQUE,
+    latitude NUMERIC(10, 8),
+    longitude NUMERIC(11, 8),
+    location_pinned_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     UNIQUE(address, city_id)
