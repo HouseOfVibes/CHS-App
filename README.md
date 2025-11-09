@@ -16,12 +16,19 @@ CHS App is a mobile-first Progressive Web Application (PWA) designed for Contine
 - ✅ Follow-up date tracking
 - ✅ Mobile-optimized interface
 - ✅ View and filter logged homes
+- ✅ **Dynamic location management** - Add cities and subdivisions on the fly
+- ✅ **Quick-add modals** - Add new locations directly from the LogVisit form
+- ✅ **Bulk location management** - Dedicated ManageLocations page for organizing areas
+- ✅ **GPS location tracking** - Pin your current location with one tap
+- ✅ **Automatic geocoding** - Convert addresses to coordinates automatically
+- ✅ **Interactive map view** - Visual representation of all home visits
+- ✅ **Color-coded markers** - See visit results at a glance on the map
+- ✅ **Google Maps integration** - Full mapping and geocoding capabilities
 
 ### Phase 2 (Coming Soon)
 - 🔄 CoreLogic API integration
 - 🔄 Recently sold homes (last 30 days)
 - 🔄 Automated daily sync
-- 🔄 Map view of homes
 
 ### Phase 3 (Planned)
 - ⏳ Multi-user support
@@ -34,8 +41,10 @@ CHS App is a mobile-first Progressive Web Application (PWA) designed for Contine
 - **Frontend:** Vite + React 18 + TypeScript
 - **Styling:** Tailwind CSS + shadcn/ui
 - **Backend:** Supabase (PostgreSQL + Auth + Realtime)
+- **Forms:** React Hook Form + Zod validation
+- **Maps:** @react-google-maps/api
+- **APIs:** Google Maps JavaScript API, Geocoding API, Geolocation API
 - **Deployment:** Vercel
-- **Maps:** Google Maps API (Phase 2)
 
 ## CHS Brand Colors
 
@@ -71,8 +80,11 @@ CHS App is a mobile-first Progressive Web Application (PWA) designed for Contine
    ```bash
    cp .env.example .env.local
    ```
-   
-   Edit `.env.local` with your Supabase credentials
+
+   Edit `.env.local` with your credentials:
+   - `VITE_SUPABASE_URL` - Your Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+   - `VITE_GOOGLE_MAPS_API_KEY` - Your Google Maps API key (required for map features)
 
 4. **Set up Supabase database**
    - Create a new Supabase project at https://supabase.com
@@ -80,7 +92,16 @@ CHS App is a mobile-first Progressive Web Application (PWA) designed for Contine
    - Run the schema from `database/schema.sql`
    - Run the seed data from `database/seed.sql`
 
-5. **Start development server**
+5. **Set up Google Maps API**
+   - Create a project in [Google Cloud Console](https://console.cloud.google.com/)
+   - Enable the following APIs:
+     - Maps JavaScript API
+     - Geocoding API
+     - Geolocation API
+   - Create an API key and add it to your `.env.local`
+   - (Optional) Restrict the API key to your domain for production
+
+6. **Start development server**
    ```bash
    npm run dev
    ```
@@ -113,10 +134,24 @@ CHS-App/
 
 ## Roadmap
 
-- [x] Phase 1: Core home logging functionality
-- [ ] Phase 2: CoreLogic integration
-- [ ] Phase 3: Multi-user support
-- [ ] Phase 4: Advanced analytics and reporting
+- [x] **Phase 1: Core home logging functionality** ✅
+  - Log visits with validation
+  - View and filter homes
+  - Dynamic location management
+  - Google Maps integration with GPS tracking
+  - Interactive map visualization
+- [ ] **Phase 2: CoreLogic API integration**
+  - Recently sold homes data
+  - Automated daily sync
+  - Enhanced lead targeting
+- [ ] **Phase 3: Multi-user support**
+  - Employee accounts and roles
+  - Team dashboard
+  - Performance tracking
+- [ ] **Phase 4: Advanced analytics and reporting**
+  - Conversion metrics
+  - Territory optimization
+  - Custom reports
 
 ## License
 
