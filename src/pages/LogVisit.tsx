@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { supabase } from '../lib/supabase'
+import { geocodeAddress, getCurrentLocation } from '../lib/geocoding'
 import type { City, Subdivision, VisitResult } from '../types'
 
 // Form validation schema
@@ -45,6 +46,10 @@ function LogVisit() {
   const [newSubdivisionName, setNewSubdivisionName] = useState('')
   const [isAddingCity, setIsAddingCity] = useState(false)
   const [isAddingSubdivision, setIsAddingSubdivision] = useState(false)
+
+  // Location tracking
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [isPinningLocation, setIsPinningLocation] = useState(false)
 
   const {
     register,
@@ -114,6 +119,13 @@ function LogVisit() {
       // Get current user
       const { data: { user } } = await supabase.auth.getUser()
 
+      // Try to geocode if no location pinned
+      let coords = location
+      if (!coords && data.address) {
+        const fullAddress = `${data.address}, ${cities.find(c => c.id === data.city_id)?.name || ''}, TX`
+        coords = await geocodeAddress(fullAddress)
+      }
+
       const homeData = {
         city_id: data.city_id,
         subdivision_id: data.subdivision_id || null,
@@ -126,6 +138,9 @@ function LogVisit() {
         notes: data.notes || null,
         canvasser_id: user?.id || null,
         source: 'manual',
+        latitude: coords?.lat || null,
+        longitude: coords?.lng || null,
+        location_pinned_at: coords ? new Date().toISOString() : null,
       }
 
       const { error: insertError } = await supabase
@@ -138,6 +153,7 @@ function LogVisit() {
 
       setSuccess(true)
       reset()
+      setLocation(null)
 
       // Redirect to dashboard after 2 seconds
       setTimeout(() => {
@@ -217,6 +233,24 @@ function LogVisit() {
       alert(err.message || 'Failed to add subdivision')
     } finally {
       setIsAddingSubdivision(false)
+    }
+  }
+
+  // Pin current location
+  const handlePinLocation = async () => {
+    setIsPinningLocation(true)
+    try {
+      const coords = await getCurrentLocation()
+      if (coords) {
+        setLocation(coords)
+      } else {
+        alert('Unable to get your current location. Please enable location services.')
+      }
+    } catch (err) {
+      console.error('Error pinning location:', err)
+      alert('Failed to get current location')
+    } finally {
+      setIsPinningLocation(false)
     }
   }
 
@@ -432,6 +466,38 @@ function LogVisit() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent resize-none"
                 placeholder="Additional notes or observations..."
               />
+            </div>
+
+            {/* Location Pin */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-semibold text-chs-deep-navy">
+                  Location (Optional)
+                </label>
+                {location && (
+                  <span className="text-xs text-green-600 font-medium">✓ Location Pinned</span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={handlePinLocation}
+                disabled={isPinningLocation}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-chs-water-blue text-chs-water-blue rounded-lg font-semibold hover:bg-chs-water-blue hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {isPinningLocation ? 'Getting Location...' : location ? 'Update Location' : 'Pin Current Location'}
+              </button>
+              {location && (
+                <p className="text-xs text-gray-500 mt-2">
+                  Coordinates: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+                </p>
+              )}
+              <p className="text-xs text-gray-500 mt-2">
+                {location ? 'Location will be saved with this visit.' : 'Address will be auto-geocoded if location not pinned.'}
+              </p>
             </div>
 
             {/* Submit Button */}
