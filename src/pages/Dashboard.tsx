@@ -27,7 +27,7 @@ function Dashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             {/* Log Visit Card */}
             <Link to="/log-visit">
               <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-teal-green">
@@ -62,6 +62,26 @@ function Dashboard() {
                 </div>
                 <p className="text-gray-600">
                   Browse and filter all logged home visits.
+                </p>
+              </div>
+            </Link>
+
+            {/* Manage Locations Card */}
+            <Link to="/manage-locations">
+              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-bright-green">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-chs-bright-green rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="ml-4 text-xl font-semibold text-chs-deep-navy">
+                    Manage Locations
+                  </h3>
+                </div>
+                <p className="text-gray-600">
+                  Add and organize cities and subdivisions.
                 </p>
               </div>
             </Link>

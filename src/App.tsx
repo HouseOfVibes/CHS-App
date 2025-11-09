@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import LogVisit from './pages/LogVisit'
 import ViewHomes from './pages/ViewHomes'
+import ManageLocations from './pages/ManageLocations'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/log-visit" element={<LogVisit />} />
           <Route path="/view-homes" element={<ViewHomes />} />
+          <Route path="/manage-locations" element={<ManageLocations />} />
         </Routes>
       </div>
     </Router>

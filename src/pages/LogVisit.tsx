@@ -38,11 +38,20 @@ function LogVisit() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  // Quick add modals
+  const [showCityModal, setShowCityModal] = useState(false)
+  const [showSubdivisionModal, setShowSubdivisionModal] = useState(false)
+  const [newCityName, setNewCityName] = useState('')
+  const [newSubdivisionName, setNewSubdivisionName] = useState('')
+  const [isAddingCity, setIsAddingCity] = useState(false)
+  const [isAddingSubdivision, setIsAddingSubdivision] = useState(false)
+
   const {
     register,
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<LogVisitFormData>({
     resolver: zodResolver(logVisitSchema),
@@ -157,6 +166,60 @@ function LogVisit() {
     selectedResult === 'Scheduled Demo' ||
     selectedResult === 'Interested - Call Back'
 
+  // Add new city
+  const handleAddCity = async () => {
+    if (!newCityName.trim()) return
+
+    setIsAddingCity(true)
+    try {
+      const { data, error } = await supabase
+        .from('cities')
+        .insert([{ name: newCityName.trim() }])
+        .select()
+        .single()
+
+      if (error) throw error
+
+      // Update cities list and select new city
+      setCities([...cities, data].sort((a, b) => a.name.localeCompare(b.name)))
+      setValue('city_id', data.id)
+      setNewCityName('')
+      setShowCityModal(false)
+    } catch (err: any) {
+      console.error('Error adding city:', err)
+      alert(err.message || 'Failed to add city')
+    } finally {
+      setIsAddingCity(false)
+    }
+  }
+
+  // Add new subdivision
+  const handleAddSubdivision = async () => {
+    if (!newSubdivisionName.trim() || !selectedCityId) return
+
+    setIsAddingSubdivision(true)
+    try {
+      const { data, error } = await supabase
+        .from('subdivisions')
+        .insert([{ name: newSubdivisionName.trim(), city_id: selectedCityId }])
+        .select()
+        .single()
+
+      if (error) throw error
+
+      // Update subdivisions list and select new subdivision
+      setSubdivisions([...subdivisions, data].sort((a, b) => a.name.localeCompare(b.name)))
+      setValue('subdivision_id', data.id)
+      setNewSubdivisionName('')
+      setShowSubdivisionModal(false)
+    } catch (err: any) {
+      console.error('Error adding subdivision:', err)
+      alert(err.message || 'Failed to add subdivision')
+    } finally {
+      setIsAddingSubdivision(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-chs-light-aqua via-white to-chs-light-gray">
       {/* Header */}
@@ -198,9 +261,18 @@ function LogVisit() {
           <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-lg shadow-md p-6">
             {/* City Selection */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-chs-deep-navy mb-2">
-                City <span className="text-red-500">*</span>
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-semibold text-chs-deep-navy">
+                  City <span className="text-red-500">*</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowCityModal(true)}
+                  className="text-sm text-chs-water-blue hover:text-chs-teal-green font-medium flex items-center gap-1"
+                >
+                  <span>+</span> New City
+                </button>
+              </div>
               <select
                 {...register('city_id')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
@@ -219,9 +291,19 @@ function LogVisit() {
 
             {/* Subdivision Selection (Optional) */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-chs-deep-navy mb-2">
-                Subdivision (Optional)
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-semibold text-chs-deep-navy">
+                  Subdivision (Optional)
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowSubdivisionModal(true)}
+                  disabled={!selectedCityId}
+                  className="text-sm text-chs-water-blue hover:text-chs-teal-green font-medium flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span>+</span> New Subdivision
+                </button>
+              </div>
               <select
                 {...register('subdivision_id')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
@@ -371,6 +453,81 @@ function LogVisit() {
           </form>
         </div>
       </main>
+
+      {/* Add City Modal */}
+      {showCityModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-xl font-semibold text-chs-deep-navy mb-4">Add New City</h3>
+            <input
+              type="text"
+              value={newCityName}
+              onChange={(e) => setNewCityName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddCity()}
+              placeholder="Enter city name"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent mb-4"
+              autoFocus
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={handleAddCity}
+                disabled={!newCityName.trim() || isAddingCity}
+                className="flex-1 bg-chs-gradient text-white py-2 px-4 rounded-lg font-semibold hover:shadow-lg transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isAddingCity ? 'Adding...' : 'Add City'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowCityModal(false)
+                  setNewCityName('')
+                }}
+                className="px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Subdivision Modal */}
+      {showSubdivisionModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-xl font-semibold text-chs-deep-navy mb-2">Add New Subdivision</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              For: <span className="font-semibold">{cities.find(c => c.id === selectedCityId)?.name}</span>
+            </p>
+            <input
+              type="text"
+              value={newSubdivisionName}
+              onChange={(e) => setNewSubdivisionName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddSubdivision()}
+              placeholder="Enter subdivision name"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent mb-4"
+              autoFocus
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={handleAddSubdivision}
+                disabled={!newSubdivisionName.trim() || isAddingSubdivision}
+                className="flex-1 bg-chs-gradient text-white py-2 px-4 rounded-lg font-semibold hover:shadow-lg transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isAddingSubdivision ? 'Adding...' : 'Add Subdivision'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowSubdivisionModal(false)
+                  setNewSubdivisionName('')
+                }}
+                className="px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
