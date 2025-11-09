@@ -78,6 +78,15 @@ function Map({ homes, center = defaultCenter, zoom = 11, height = '600px' }: Map
     )
   }
 
+  // Check if Google Maps script has loaded (from parent LoadScript)
+  if (typeof window !== 'undefined' && !window.google) {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-100 rounded-lg">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-chs-teal-green"></div>
+      </div>
+    )
+  }
+
   return (
     <div style={{ height }}>
       <GoogleMap
