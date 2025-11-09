@@ -344,7 +344,7 @@ function LogVisit() {
             {/* City Selection */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-semibold text-chs-deep-navy">
+                <label htmlFor="city_id" className="block text-sm font-semibold text-chs-deep-navy">
                   City <span className="text-red-500">*</span>
                 </label>
                 <button
@@ -357,6 +357,8 @@ function LogVisit() {
               </div>
               <select
                 {...register('city_id')}
+                id="city_id"
+                autoComplete="address-level2"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
               >
                 <option value="">Select a city</option>
@@ -374,7 +376,7 @@ function LogVisit() {
             {/* Subdivision Selection (Optional) */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-semibold text-chs-deep-navy">
+                <label htmlFor="subdivision_id" className="block text-sm font-semibold text-chs-deep-navy">
                   Subdivision (Optional)
                 </label>
                 <button
@@ -388,6 +390,8 @@ function LogVisit() {
               </div>
               <select
                 {...register('subdivision_id')}
+                id="subdivision_id"
+                autoComplete="off"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
                 disabled={!selectedCityId}
               >
@@ -405,12 +409,14 @@ function LogVisit() {
 
             {/* Street Name */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-chs-deep-navy mb-2">
+              <label htmlFor="street_name" className="block text-sm font-semibold text-chs-deep-navy mb-2">
                 Street Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 {...register('street_name')}
+                id="street_name"
+                autoComplete="address-line2"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
                 placeholder="e.g., Main Street"
               />
@@ -421,12 +427,14 @@ function LogVisit() {
 
             {/* Address */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-chs-deep-navy mb-2">
+              <label htmlFor="address" className="block text-sm font-semibold text-chs-deep-navy mb-2">
                 Address <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 {...register('address')}
+                id="address"
+                autoComplete="street-address"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
                 placeholder="e.g., 123 Main Street"
               />
@@ -448,11 +456,13 @@ function LogVisit() {
 
             {/* Visit Result */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-chs-deep-navy mb-2">
+              <label htmlFor="result" className="block text-sm font-semibold text-chs-deep-navy mb-2">
                 Visit Result <span className="text-red-500">*</span>
               </label>
               <select
                 {...register('result')}
+                id="result"
+                autoComplete="off"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
               >
                 <option value="">Select result</option>
@@ -476,12 +486,14 @@ function LogVisit() {
 
                 {/* Contact Name */}
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact_name" className="block text-sm font-medium text-gray-700 mb-2">
                     Contact Name
                   </label>
                   <input
                     type="text"
                     {...register('contact_name')}
+                    id="contact_name"
+                    autoComplete="name"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
                     placeholder="e.g., John Doe"
                   />
@@ -489,12 +501,14 @@ function LogVisit() {
 
                 {/* Phone Number */}
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 mb-2">
                     Phone Number
                   </label>
                   <input
                     type="tel"
                     {...register('phone_number')}
+                    id="phone_number"
+                    autoComplete="tel"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
                     placeholder="e.g., (555) 123-4567"
                   />
@@ -502,12 +516,14 @@ function LogVisit() {
 
                 {/* Follow-up Date */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="follow_up_date" className="block text-sm font-medium text-gray-700 mb-2">
                     Follow-up Date
                   </label>
                   <input
                     type="date"
                     {...register('follow_up_date')}
+                    id="follow_up_date"
+                    autoComplete="off"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
                   />
                 </div>
@@ -516,12 +532,14 @@ function LogVisit() {
 
             {/* Notes */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-chs-deep-navy mb-2">
+              <label htmlFor="notes" className="block text-sm font-semibold text-chs-deep-navy mb-2">
                 Notes (Optional)
               </label>
               <textarea
                 {...register('notes')}
+                id="notes"
                 rows={4}
+                autoComplete="off"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent resize-none"
                 placeholder="Additional notes or observations..."
               />
@@ -584,12 +602,16 @@ function LogVisit() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <h3 className="text-xl font-semibold text-chs-deep-navy mb-4">Add New City</h3>
+            <label htmlFor="new_city_name" className="sr-only">City Name</label>
             <input
               type="text"
+              id="new_city_name"
+              name="new_city_name"
               value={newCityName}
               onChange={(e) => setNewCityName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAddCity()}
               placeholder="Enter city name"
+              autoComplete="off"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent mb-4"
               autoFocus
             />
@@ -623,12 +645,16 @@ function LogVisit() {
             <p className="text-sm text-gray-600 mb-4">
               For: <span className="font-semibold">{cities.find(c => c.id === selectedCityId)?.name}</span>
             </p>
+            <label htmlFor="new_subdivision_name" className="sr-only">Subdivision Name</label>
             <input
               type="text"
+              id="new_subdivision_name"
+              name="new_subdivision_name"
               value={newSubdivisionName}
               onChange={(e) => setNewSubdivisionName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAddSubdivision()}
               placeholder="Enter subdivision name"
+              autoComplete="off"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent mb-4"
               autoFocus
             />
