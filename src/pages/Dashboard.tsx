@@ -184,13 +184,13 @@ function Dashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {/* Log Visit Card */}
             <Link to="/log-visit">
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-teal-green">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-chs-teal-green rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-teal-green min-h-[200px]">
+                <div className="flex items-center mb-6">
+                  <div className="w-14 h-14 bg-chs-teal-green rounded-full flex items-center justify-center">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                   </div>
@@ -198,7 +198,7 @@ function Dashboard() {
                     Log Visit
                   </h3>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 leading-relaxed">
                   Record a new home visit with results and contact information.
                 </p>
               </div>
@@ -206,10 +206,10 @@ function Dashboard() {
 
             {/* View Homes Card */}
             <Link to="/view-homes">
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-water-blue">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-chs-water-blue rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-water-blue min-h-[200px]">
+                <div className="flex items-center mb-6">
+                  <div className="w-14 h-14 bg-chs-water-blue rounded-full flex items-center justify-center">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                     </svg>
                   </div>
@@ -217,7 +217,7 @@ function Dashboard() {
                     View Homes
                   </h3>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 leading-relaxed">
                   Browse and filter all logged home visits.
                 </p>
               </div>
@@ -225,10 +225,10 @@ function Dashboard() {
 
             {/* Manage Locations Card */}
             <Link to="/manage-locations">
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-bright-green">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-chs-bright-green rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-bright-green min-h-[200px]">
+                <div className="flex items-center mb-6">
+                  <div className="w-14 h-14 bg-chs-bright-green rounded-full flex items-center justify-center">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -237,7 +237,7 @@ function Dashboard() {
                     Manage Locations
                   </h3>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 leading-relaxed">
                   Add and organize cities and subdivisions.
                 </p>
               </div>
@@ -245,10 +245,10 @@ function Dashboard() {
 
             {/* Map View Card */}
             <Link to="/map-view">
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-deep-navy">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-chs-deep-navy rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-deep-navy min-h-[200px]">
+                <div className="flex items-center mb-6">
+                  <div className="w-14 h-14 bg-chs-deep-navy rounded-full flex items-center justify-center">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                     </svg>
                   </div>
@@ -256,7 +256,7 @@ function Dashboard() {
                     Map View
                   </h3>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 leading-relaxed">
                   View all logged homes on an interactive map.
                 </p>
               </div>
@@ -264,10 +264,10 @@ function Dashboard() {
 
             {/* Import Homes Card */}
             <Link to="/import-homes">
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-purple-600">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-purple-600 min-h-[200px]">
+                <div className="flex items-center mb-6">
+                  <div className="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                   </div>
@@ -275,7 +275,7 @@ function Dashboard() {
                     Import Homes
                   </h3>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 leading-relaxed">
                   Bulk import prospective homes from CSV files.
                 </p>
               </div>
