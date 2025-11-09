@@ -28,10 +28,11 @@ const defaultCenter = {
 
 function Map({ homes, center = defaultCenter, zoom = 11, height = '600px' }: MapProps) {
   const [selectedHome, setSelectedHome] = useState<HomeWithRelations | null>(null)
+  const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    googleMapsApiKey: googleMapsApiKey || '',
   })
 
   const onLoad = useCallback((_map: google.maps.Map) => {
@@ -67,10 +68,31 @@ function Map({ homes, center = defaultCenter, zoom = 11, height = '600px' }: Map
     }
   }
 
+  // Check if API key is configured
+  if (!googleMapsApiKey) {
+    return (
+      <div className="flex items-center justify-center h-full bg-yellow-50 border-2 border-yellow-300 rounded-lg p-6">
+        <div className="text-center">
+          <svg className="w-12 h-12 text-yellow-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <p className="text-yellow-800 font-semibold mb-1">Google Maps Not Configured</p>
+          <p className="text-yellow-700 text-sm">Add VITE_GOOGLE_MAPS_API_KEY to environment variables</p>
+        </div>
+      </div>
+    )
+  }
+
   if (loadError) {
     return (
-      <div className="flex items-center justify-center h-full bg-gray-100 rounded-lg">
-        <p className="text-red-600">Error loading Google Maps</p>
+      <div className="flex items-center justify-center h-full bg-red-50 border-2 border-red-300 rounded-lg p-6">
+        <div className="text-center">
+          <svg className="w-12 h-12 text-red-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-red-800 font-semibold mb-1">Error Loading Google Maps</p>
+          <p className="text-red-700 text-sm">Check your API key and ensure Maps JavaScript API is enabled</p>
+        </div>
       </div>
     )
   }
@@ -104,7 +126,7 @@ function Map({ homes, center = defaultCenter, zoom = 11, height = '600px' }: Map
             position={{ lat: home.latitude!, lng: home.longitude! }}
             onClick={() => setSelectedHome(home)}
             icon={{
-              url: `http://maps.google.com/mapfiles/ms/icons/${getMarkerColor(home.result)}-dot.png`,
+              url: `https://maps.google.com/mapfiles/ms/icons/${getMarkerColor(home.result)}-dot.png`,
             }}
           />
         ))}
