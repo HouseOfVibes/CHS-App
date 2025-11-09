@@ -1,11 +1,16 @@
 -- Seed initial cities for CHS operations
 INSERT INTO cities (name) VALUES
     ('Alvin'),
+    ('Angleton'),
+    ('Brazoria'),
+    ('Clute'),
     ('Cypress'),
+    ('Freeport'),
     ('Fulshear'),
     ('Houston'),
     ('Iowa Colony'),
     ('Katy'),
+    ('Lake Jackson'),
     ('Manvel'),
     ('Meridiana'),
     ('Missouri City'),
@@ -14,7 +19,9 @@ INSERT INTO cities (name) VALUES
     ('Rosharon'),
     ('South Houston'),
     ('Sugar Land'),
-    ('Texas City')
+    ('Sweeny'),
+    ('Texas City'),
+    ('West Columbia')
 ON CONFLICT (name) DO NOTHING;
 
 -- Seed common subdivisions for each city
