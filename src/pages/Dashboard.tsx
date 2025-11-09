@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import { format, startOfWeek, endOfWeek } from 'date-fns'
 import type { AdminNote } from '../types'
 
@@ -173,6 +173,31 @@ function Dashboard() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
+          {/* Environment Configuration Warning */}
+          {!isSupabaseConfigured && (
+            <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-8 rounded-lg">
+              <div className="flex items-start">
+                <svg className="w-6 h-6 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">Configuration Required</h3>
+                  <p className="text-red-700 mb-3">
+                    The app is missing required environment variables. Please configure the following in your Vercel project settings:
+                  </p>
+                  <ul className="list-disc list-inside text-red-700 space-y-1 text-sm font-mono">
+                    <li>VITE_SUPABASE_URL</li>
+                    <li>VITE_SUPABASE_ANON_KEY</li>
+                    <li>VITE_GOOGLE_MAPS_API_KEY</li>
+                  </ul>
+                  <p className="text-red-600 text-sm mt-3">
+                    After adding environment variables, redeploy the application without using build cache.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Welcome Section */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-2xl font-semibold text-chs-deep-navy mb-2">
