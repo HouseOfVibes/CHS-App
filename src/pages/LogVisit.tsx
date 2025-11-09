@@ -164,8 +164,8 @@ function LogVisit() {
 
       // Try to geocode if no location pinned
       let coords = location
-      if (!coords && data.address) {
-        const fullAddress = `${data.address}, ${cities.find(c => c.id === data.city_id)?.name || ''}, TX`
+      if (!coords && data.address && data.street_name) {
+        const fullAddress = `${data.address} ${data.street_name}, ${cities.find(c => c.id === data.city_id)?.name || ''}, TX`
         coords = await geocodeAddress(fullAddress)
       }
 
