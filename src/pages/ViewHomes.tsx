@@ -507,7 +507,7 @@ function ViewHomes() {
                         {format(new Date(home.created_at), 'h:mm a')}
                       </p>
                       <button
-                        onClick={() => openDirections(home.address, home.cities?.name)}
+                        onClick={() => openDirections(`${home.address} ${home.street_name}`, home.cities?.name)}
                         className="mt-2 px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-medium flex items-center gap-1.5"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
