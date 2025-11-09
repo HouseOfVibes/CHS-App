@@ -41,3 +41,11 @@ export type VisitResult =
   | 'Not Interested'
   | 'Interested - Call Back'
   | 'Sold/Closed'
+
+export interface AdminNote {
+  id: string
+  note: string
+  user_id: string
+  created_at: string
+  updated_at: string
+}
