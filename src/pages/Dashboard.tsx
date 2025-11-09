@@ -1,6 +1,84 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
+import { format, startOfWeek, endOfWeek, subDays } from 'date-fns'
+
+interface DashboardStats {
+  totalVisits: number
+  thisWeek: number
+  demosScheduled: number
+  followUps: number
+  topCity: string
+  conversionRate: number
+}
 
 function Dashboard() {
+  const [stats, setStats] = useState<DashboardStats>({
+    totalVisits: 0,
+    thisWeek: 0,
+    demosScheduled: 0,
+    followUps: 0,
+    topCity: '-',
+    conversionRate: 0,
+  })
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoading(true)
+
+      try {
+        // Fetch all homes
+        const { data: homes, error } = await supabase
+          .from('homes')
+          .select(`
+            *,
+            cities (name)
+          `)
+
+        if (error) throw error
+
+        const now = new Date()
+        const weekStart = startOfWeek(now, { weekStartsOn: 0 }) // Sunday
+        const weekEnd = endOfWeek(now, { weekStartsOn: 0 }) // Saturday
+        const weekStartStr = format(weekStart, 'yyyy-MM-dd')
+        const weekEndStr = format(weekEnd, 'yyyy-MM-dd')
+
+        // Calculate stats
+        const totalVisits = homes?.length || 0
+        const thisWeek = homes?.filter(h => h.date_visited >= weekStartStr && h.date_visited <= weekEndStr).length || 0
+        const demosScheduled = homes?.filter(h => h.result === 'Scheduled Demo').length || 0
+        const followUps = homes?.filter(h => h.follow_up_date && h.follow_up_date >= format(now, 'yyyy-MM-dd')).length || 0
+
+        // Calculate conversion rate (demos / total visits)
+        const conversionRate = totalVisits > 0 ? ((demosScheduled / totalVisits) * 100) : 0
+
+        // Find top city
+        const cityCount: Record<string, number> = {}
+        homes?.forEach(h => {
+          const cityName = (h.cities as any)?.name || 'Unknown'
+          cityCount[cityName] = (cityCount[cityName] || 0) + 1
+        })
+        const topCity = Object.entries(cityCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '-'
+
+        setStats({
+          totalVisits,
+          thisWeek,
+          demosScheduled,
+          followUps,
+          topCity,
+          conversionRate,
+        })
+      } catch (err) {
+        console.error('Error fetching stats:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchStats()
+  }, [])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-chs-light-aqua via-white to-chs-light-gray">
       {/* Header */}
@@ -106,25 +184,49 @@ function Dashboard() {
             </Link>
           </div>
 
-          {/* Stats Section (Placeholder for Phase 1) */}
+          {/* Stats Section */}
           <div className="mt-8 bg-white rounded-lg shadow-md p-6">
             <h3 className="text-xl font-semibold text-chs-deep-navy mb-4">
               Quick Stats
             </h3>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <p className="text-3xl font-bold text-chs-teal-green">0</p>
-                <p className="text-sm text-gray-600">Total Visits</p>
+
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chs-teal-green"></div>
               </div>
-              <div>
-                <p className="text-3xl font-bold text-chs-water-blue">0</p>
-                <p className="text-sm text-gray-600">This Week</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-chs-bright-green">0</p>
-                <p className="text-sm text-gray-600">Demos Scheduled</p>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mb-6">
+                  <div className="p-4 bg-gradient-to-br from-chs-teal-green/10 to-chs-teal-green/5 rounded-lg">
+                    <p className="text-3xl font-bold text-chs-teal-green">{stats.totalVisits}</p>
+                    <p className="text-sm text-gray-600 mt-1">Total Visits</p>
+                  </div>
+                  <div className="p-4 bg-gradient-to-br from-chs-water-blue/10 to-chs-water-blue/5 rounded-lg">
+                    <p className="text-3xl font-bold text-chs-water-blue">{stats.thisWeek}</p>
+                    <p className="text-sm text-gray-600 mt-1">This Week</p>
+                  </div>
+                  <div className="p-4 bg-gradient-to-br from-chs-bright-green/10 to-chs-bright-green/5 rounded-lg">
+                    <p className="text-3xl font-bold text-chs-bright-green">{stats.demosScheduled}</p>
+                    <p className="text-sm text-gray-600 mt-1">Demos Scheduled</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center border-t pt-6">
+                  <div>
+                    <p className="text-2xl font-bold text-purple-600">{stats.followUps}</p>
+                    <p className="text-sm text-gray-600 mt-1">Pending Follow-ups</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-orange-600">{stats.conversionRate.toFixed(1)}%</p>
+                    <p className="text-sm text-gray-600 mt-1">Conversion Rate</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-indigo-600">{stats.topCity}</p>
+                    <p className="text-sm text-gray-600 mt-1">Top City</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>

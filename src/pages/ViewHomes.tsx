@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import type { Home, City, Subdivision, VisitResult } from '../types'
 import { format } from 'date-fns'
+import { exportToCSV, exportToJSON } from '../lib/export'
+import { openDirections } from '../lib/directions'
 
 interface HomeWithRelations extends Home {
   cities?: City
@@ -19,6 +21,9 @@ function ViewHomes() {
   const [cityFilter, setCityFilter] = useState<string>('')
   const [resultFilter, setResultFilter] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [startDate, setStartDate] = useState<string>('')
+  const [endDate, setEndDate] = useState<string>('')
+  const [sortBy, setSortBy] = useState<string>('date_visited_desc')
 
   // Fetch homes on component mount
   useEffect(() => {
@@ -79,8 +84,40 @@ function ViewHomes() {
       )
     }
 
+    // Date range filter
+    if (startDate) {
+      filtered = filtered.filter((home) => home.date_visited >= startDate)
+    }
+    if (endDate) {
+      filtered = filtered.filter((home) => home.date_visited <= endDate)
+    }
+
+    // Sort
+    switch (sortBy) {
+      case 'date_visited_desc':
+        filtered.sort((a, b) => new Date(b.date_visited).getTime() - new Date(a.date_visited).getTime())
+        break
+      case 'date_visited_asc':
+        filtered.sort((a, b) => new Date(a.date_visited).getTime() - new Date(b.date_visited).getTime())
+        break
+      case 'address_asc':
+        filtered.sort((a, b) => a.address.localeCompare(b.address))
+        break
+      case 'address_desc':
+        filtered.sort((a, b) => b.address.localeCompare(a.address))
+        break
+      case 'city_asc':
+        filtered.sort((a, b) => (a.cities?.name || '').localeCompare(b.cities?.name || ''))
+        break
+      case 'city_desc':
+        filtered.sort((a, b) => (b.cities?.name || '').localeCompare(a.cities?.name || ''))
+        break
+      default:
+        break
+    }
+
     setFilteredHomes(filtered)
-  }, [cityFilter, resultFilter, searchQuery, homes])
+  }, [cityFilter, resultFilter, searchQuery, startDate, endDate, sortBy, homes])
 
   // Get unique cities from homes
   const uniqueCities = Array.from(
@@ -122,6 +159,8 @@ function ViewHomes() {
     setCityFilter('')
     setResultFilter('')
     setSearchQuery('')
+    setStartDate('')
+    setEndDate('')
   }
 
   return (
@@ -159,7 +198,7 @@ function ViewHomes() {
               </button>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-4 mb-4">
               {/* Search */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -212,14 +251,83 @@ function ViewHomes() {
                 </select>
               </div>
             </div>
+
+            {/* Date Range Filters */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Sort By
+                </label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
+                >
+                  <option value="date_visited_desc">Date Visited (Newest)</option>
+                  <option value="date_visited_asc">Date Visited (Oldest)</option>
+                  <option value="address_asc">Address (A-Z)</option>
+                  <option value="address_desc">Address (Z-A)</option>
+                  <option value="city_asc">City (A-Z)</option>
+                  <option value="city_desc">City (Z-A)</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          {/* Results Summary */}
+          {/* Results Summary & Export */}
           <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-            <p className="text-sm text-gray-600">
-              Showing <span className="font-semibold text-chs-deep-navy">{filteredHomes.length}</span> of{' '}
-              <span className="font-semibold text-chs-deep-navy">{homes.length}</span> total visits
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-600">
+                Showing <span className="font-semibold text-chs-deep-navy">{filteredHomes.length}</span> of{' '}
+                <span className="font-semibold text-chs-deep-navy">{homes.length}</span> total visits
+              </p>
+
+              {/* Export Buttons */}
+              {filteredHomes.length > 0 && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => exportToCSV(filteredHomes, `chs-homes-${new Date().toISOString().split('T')[0]}.csv`)}
+                    className="px-4 py-2 bg-chs-teal-green text-white rounded-lg hover:bg-chs-water-blue transition-colors text-sm font-medium flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export CSV
+                  </button>
+                  <button
+                    onClick={() => exportToJSON(filteredHomes, `chs-homes-${new Date().toISOString().split('T')[0]}.json`)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export JSON
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Loading State */}
@@ -398,6 +506,15 @@ function ViewHomes() {
                       <p className="text-xs text-gray-400">
                         {format(new Date(home.created_at), 'h:mm a')}
                       </p>
+                      <button
+                        onClick={() => openDirections(home.address, home.cities?.name)}
+                        className="mt-2 px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-medium flex items-center gap-1.5"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                        Directions
+                      </button>
                     </div>
                   </div>
                 </div>

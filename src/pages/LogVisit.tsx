@@ -51,6 +51,10 @@ function LogVisit() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [isPinningLocation, setIsPinningLocation] = useState(false)
 
+  // Duplicate detection
+  const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null)
+  const [isCheckingDuplicate, setIsCheckingDuplicate] = useState(false)
+
   const {
     register,
     handleSubmit,
@@ -64,6 +68,8 @@ function LogVisit() {
 
   const selectedCityId = watch('city_id')
   const selectedResult = watch('result')
+  const watchedAddress = watch('address')
+  const watchedCity = watch('city_id')
 
   // Fetch cities on component mount
   useEffect(() => {
@@ -109,6 +115,48 @@ function LogVisit() {
       setFilteredSubdivisions([])
     }
   }, [selectedCityId, subdivisions])
+
+  // Check for duplicate addresses
+  useEffect(() => {
+    const checkDuplicate = async () => {
+      if (!watchedAddress || !watchedCity) {
+        setDuplicateWarning(null)
+        return
+      }
+
+      setIsCheckingDuplicate(true)
+
+      try {
+        const { data, error } = await supabase
+          .from('homes')
+          .select('id, address, date_visited, result')
+          .eq('address', watchedAddress)
+          .eq('city_id', watchedCity)
+          .limit(1)
+
+        if (error) throw error
+
+        if (data && data.length > 0) {
+          const existingHome = data[0]
+          setDuplicateWarning(
+            `This address was already logged on ${existingHome.date_visited}${
+              existingHome.result ? ` (${existingHome.result})` : ''
+            }`
+          )
+        } else {
+          setDuplicateWarning(null)
+        }
+      } catch (err) {
+        console.error('Error checking duplicate:', err)
+      } finally {
+        setIsCheckingDuplicate(false)
+      }
+    }
+
+    // Debounce the check
+    const timeoutId = setTimeout(checkDuplicate, 500)
+    return () => clearTimeout(timeoutId)
+  }, [watchedAddress, watchedCity])
 
   const onSubmit = async (data: LogVisitFormData) => {
     setIsSubmitting(true)
@@ -384,6 +432,17 @@ function LogVisit() {
               />
               {errors.address && (
                 <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
+              )}
+              {duplicateWarning && (
+                <div className="mt-2 p-3 bg-yellow-50 border border-yellow-300 rounded-lg flex items-start gap-2">
+                  <svg className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-medium text-yellow-800">Possible Duplicate</p>
+                    <p className="text-sm text-yellow-700">{duplicateWarning}</p>
+                  </div>
+                </div>
               )}
             </div>
 
