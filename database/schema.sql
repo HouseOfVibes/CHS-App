@@ -72,18 +72,17 @@ ALTER TABLE cities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subdivisions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE homes ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies (for now, allow all authenticated users)
--- Phase 1: Single user (AJ)
--- Phase 3: Will update for multi-user
+-- RLS Policies (Phase 1: Single user - open access)
+-- Phase 3: Will add authentication and update for multi-user
 
-CREATE POLICY "Allow all for authenticated users" ON cities
-    FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow all access" ON cities
+    FOR ALL USING (true);
 
-CREATE POLICY "Allow all for authenticated users" ON subdivisions
-    FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow all access" ON subdivisions
+    FOR ALL USING (true);
 
-CREATE POLICY "Allow all for authenticated users" ON homes
-    FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow all access" ON homes
+    FOR ALL USING (true);
 
 -- Updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
