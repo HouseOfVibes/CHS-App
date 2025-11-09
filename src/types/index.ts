@@ -26,6 +26,9 @@ export interface Home {
   date_visited: string
   source: 'manual' | 'corelogic'
   corelogic_id: string | null
+  latitude: number | null
+  longitude: number | null
+  location_pinned_at: string | null
   created_at: string
   updated_at: string
 }
