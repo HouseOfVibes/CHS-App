@@ -53,7 +53,6 @@ function LogVisit() {
 
   // Duplicate detection
   const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null)
-  const [isCheckingDuplicate, setIsCheckingDuplicate] = useState(false)
 
   const {
     register,
@@ -124,8 +123,6 @@ function LogVisit() {
         return
       }
 
-      setIsCheckingDuplicate(true)
-
       try {
         const { data, error } = await supabase
           .from('homes')
@@ -148,8 +145,6 @@ function LogVisit() {
         }
       } catch (err) {
         console.error('Error checking duplicate:', err)
-      } finally {
-        setIsCheckingDuplicate(false)
       }
     }
 

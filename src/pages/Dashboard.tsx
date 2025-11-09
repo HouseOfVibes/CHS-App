@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { format, startOfWeek, endOfWeek, subDays } from 'date-fns'
+import { format, startOfWeek, endOfWeek } from 'date-fns'
 import type { AdminNote } from '../types'
 
 interface DashboardStats {
