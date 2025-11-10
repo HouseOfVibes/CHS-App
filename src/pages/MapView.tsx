@@ -115,25 +115,32 @@ function MapView() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-6 py-10">
         <div className="max-w-7xl mx-auto">
           {/* Error Message */}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
-              <p className="font-semibold">Error</p>
-              <p className="text-sm">{error}</p>
+            <div className="bg-gradient-to-r from-red-50 to-rose-50 border-l-4 border-red-500 px-6 py-4 rounded-xl mb-8 shadow-md">
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="font-bold text-red-800 text-lg">Error</p>
+                  <p className="text-sm text-red-700 mt-1">{error}</p>
+                </div>
+              </div>
             </div>
           )}
 
           {/* Filters */}
-          <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-            <div className="flex items-center justify-between">
+          <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-gray-100">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-center gap-4">
-                <label className="text-sm font-medium text-gray-700">Filter by Result:</label>
+                <label className="text-sm font-semibold text-gray-700">Filter by Result:</label>
                 <select
                   value={resultFilter}
                   onChange={(e) => setResultFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent"
+                  className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-chs-teal-green focus:border-chs-teal-green transition-all"
                 >
                   <option value="">All Results</option>
                   {visitResults.map((result) => (
@@ -152,12 +159,12 @@ function MapView() {
 
           {/* Map */}
           {isLoading ? (
-            <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-chs-teal-green mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading map...</p>
+            <div className="bg-white rounded-2xl shadow-xl p-12 text-center border border-gray-100">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-chs-teal-green mx-auto mb-4"></div>
+              <p className="text-gray-600 text-lg font-medium">Loading map...</p>
             </div>
           ) : filteredHomes.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <div className="bg-white rounded-2xl shadow-xl p-12 text-center border border-gray-100">
               <svg
                 className="w-16 h-16 text-gray-400 mx-auto mb-4"
                 fill="none"
@@ -188,15 +195,22 @@ function MapView() {
               )}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
               <Map homes={filteredHomes} center={getMapCenter()} zoom={12} height="700px" />
             </div>
           )}
 
           {/* Legend */}
           {filteredHomes.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-4 mt-6">
-              <h3 className="text-sm font-semibold text-chs-deep-navy mb-3">Map Legend</h3>
+            <div className="bg-white rounded-2xl shadow-xl p-6 mt-8 border border-gray-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-chs-teal-green to-chs-bright-green rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-chs-deep-navy">Map Legend</h3>
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
