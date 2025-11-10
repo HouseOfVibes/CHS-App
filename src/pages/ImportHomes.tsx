@@ -202,16 +202,20 @@ function ImportHomes() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+      <main className="container mx-auto px-6 py-10">
+        <div className="max-w-5xl mx-auto">
           {/* Instructions */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              CSV Format Instructions
-            </h3>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-2xl p-8 mb-8 shadow-lg">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-blue-900 mb-2">
+                  CSV Format Instructions
+                </h3>
             <p className="text-blue-800 text-sm mb-3">
               Your CSV file should have the following columns (in order):
             </p>
@@ -222,15 +226,24 @@ function ImportHomes() {
               <li><strong>Subdivision</strong> - Optional subdivision name</li>
               <li><strong>Notes</strong> - Optional notes</li>
             </ol>
-            <div className="bg-white p-3 rounded border border-blue-300 font-mono text-xs">
-              <div>123 Main St,Main Street,Pearland,Silverlake,New construction</div>
-              <div>456 Oak Ave,Oak Avenue,Lake Jackson,,</div>
+                <div className="bg-white p-4 rounded-xl border-2 border-blue-300 font-mono text-xs mt-3">
+                  <div>123 Main St,Main Street,Pearland,Silverlake,New construction</div>
+                  <div>456 Oak Ave,Oak Avenue,Lake Jackson,,</div>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Upload Section */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h3 className="text-xl font-semibold text-chs-deep-navy mb-4">Step 1: Upload CSV File</h3>
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-chs-deep-navy">Step 1: Upload CSV File</h3>
+            </div>
 
             <div className="mb-4">
               <input
