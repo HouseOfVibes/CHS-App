@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import { format, startOfWeek, endOfWeek } from 'date-fns'
 import type { AdminNote } from '../types'
 
@@ -171,174 +171,235 @@ function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Welcome Section */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-2xl font-semibold text-chs-deep-navy mb-2">
-              Welcome to CHS App
-            </h2>
-            <p className="text-gray-600">
-              Track your home visits, manage leads, and optimize your canvassing routes.
-            </p>
+      <main className="container mx-auto px-6 py-10">
+        {/* Environment Configuration Warning */}
+        {!isSupabaseConfigured && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-8 rounded-lg max-w-7xl mx-auto">
+            <div className="flex items-start">
+              <svg className="w-6 h-6 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-red-800 mb-2">Configuration Required</h3>
+                <p className="text-red-700 mb-3">
+                  The app is missing required environment variables. Please configure the following in your Vercel project settings:
+                </p>
+                <ul className="list-disc list-inside text-red-700 space-y-1 text-sm font-mono">
+                  <li>VITE_SUPABASE_URL</li>
+                  <li>VITE_SUPABASE_ANON_KEY</li>
+                  <li>VITE_GOOGLE_MAPS_API_KEY</li>
+                </ul>
+                <p className="text-red-600 text-sm mt-3">
+                  After adding environment variables, redeploy the application without using build cache.
+                </p>
+              </div>
+            </div>
           </div>
+        )}
 
-          {/* Quick Actions */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {/* Welcome Section - Brand Enhanced */}
+        <div className="max-w-7xl mx-auto mb-10">
+          <div className="bg-gradient-to-r from-chs-deep-navy via-chs-water-blue to-chs-teal-green rounded-2xl shadow-2xl p-8 md:p-10 text-white">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-3">
+                  Welcome to CHS Field App
+                </h2>
+                <p className="text-white/90 text-lg">
+                  Track visits, manage leads, and optimize your canvassing routes with ease.
+                </p>
+              </div>
+              <div className="hidden md:flex items-center gap-8 text-center">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 min-w-[120px]">
+                  <p className="text-4xl font-bold">{stats.totalVisits}</p>
+                  <p className="text-sm text-white/80 mt-1">Total Visits</p>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 min-w-[120px]">
+                  <p className="text-4xl font-bold">{stats.demosScheduled}</p>
+                  <p className="text-sm text-white/80 mt-1">Demos Set</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions - Full Width Grid */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {/* Log Visit Card */}
-            <Link to="/log-visit">
-              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-teal-green min-h-[200px]">
-                <div className="flex items-center mb-6">
-                  <div className="w-14 h-14 bg-chs-teal-green rounded-full flex items-center justify-center">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link to="/log-visit" className="group">
+              <div className="bg-gradient-to-br from-white to-chs-teal-green/5 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-chs-teal-green hover:scale-[1.02] min-h-[220px]">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-chs-teal-green to-chs-bright-green rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                   </div>
-                  <h3 className="ml-4 text-xl font-semibold text-chs-deep-navy">
-                    Log Visit
-                  </h3>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-chs-deep-navy mb-2">
+                      Log Visit
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Record a new home visit with results and contact information.
+                    </p>
+                  </div>
                 </div>
-                <p className="text-gray-600 leading-relaxed">
-                  Record a new home visit with results and contact information.
-                </p>
               </div>
             </Link>
 
             {/* View Homes Card */}
-            <Link to="/view-homes">
-              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-water-blue min-h-[200px]">
-                <div className="flex items-center mb-6">
-                  <div className="w-14 h-14 bg-chs-water-blue rounded-full flex items-center justify-center">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link to="/view-homes" className="group">
+              <div className="bg-gradient-to-br from-white to-chs-water-blue/5 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-chs-water-blue hover:scale-[1.02] min-h-[220px]">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-chs-water-blue to-chs-deep-navy rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                     </svg>
                   </div>
-                  <h3 className="ml-4 text-xl font-semibold text-chs-deep-navy">
-                    View Homes
-                  </h3>
-                </div>
-                <p className="text-gray-600 leading-relaxed">
-                  Browse and filter all logged home visits.
-                </p>
-              </div>
-            </Link>
-
-            {/* Manage Locations Card */}
-            <Link to="/manage-locations">
-              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-bright-green min-h-[200px]">
-                <div className="flex items-center mb-6">
-                  <div className="w-14 h-14 bg-chs-bright-green rounded-full flex items-center justify-center">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-chs-deep-navy mb-2">
+                      View Homes
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Browse and filter all logged home visits.
+                    </p>
                   </div>
-                  <h3 className="ml-4 text-xl font-semibold text-chs-deep-navy">
-                    Manage Locations
-                  </h3>
                 </div>
-                <p className="text-gray-600 leading-relaxed">
-                  Add and organize cities and subdivisions.
-                </p>
               </div>
             </Link>
 
             {/* Map View Card */}
-            <Link to="/map-view">
-              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-chs-deep-navy min-h-[200px]">
-                <div className="flex items-center mb-6">
-                  <div className="w-14 h-14 bg-chs-deep-navy rounded-full flex items-center justify-center">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link to="/map-view" className="group">
+              <div className="bg-gradient-to-br from-white to-chs-deep-navy/5 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-chs-deep-navy hover:scale-[1.02] min-h-[220px]">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-chs-deep-navy to-chs-water-blue rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                     </svg>
                   </div>
-                  <h3 className="ml-4 text-xl font-semibold text-chs-deep-navy">
-                    Map View
-                  </h3>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-chs-deep-navy mb-2">
+                      Map View
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      View all logged homes on an interactive map.
+                    </p>
+                  </div>
                 </div>
-                <p className="text-gray-600 leading-relaxed">
-                  View all logged homes on an interactive map.
-                </p>
+              </div>
+            </Link>
+
+            {/* Manage Locations Card */}
+            <Link to="/manage-locations" className="group">
+              <div className="bg-gradient-to-br from-white to-chs-bright-green/5 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-chs-bright-green hover:scale-[1.02] min-h-[220px]">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-chs-bright-green to-chs-teal-green rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-chs-deep-navy mb-2">
+                      Manage Locations
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Add and organize cities and subdivisions.
+                    </p>
+                  </div>
+                </div>
               </div>
             </Link>
 
             {/* Import Homes Card */}
-            <Link to="/import-homes">
-              <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-purple-600 min-h-[200px]">
-                <div className="flex items-center mb-6">
-                  <div className="w-14 h-14 bg-purple-600 rounded-full flex items-center justify-center">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link to="/import-homes" className="group">
+              <div className="bg-gradient-to-br from-white to-purple-50 rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-purple-500 hover:scale-[1.02] min-h-[220px]">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                   </div>
-                  <h3 className="ml-4 text-xl font-semibold text-chs-deep-navy">
-                    Import Homes
-                  </h3>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-chs-deep-navy mb-2">
+                      Import Homes
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Bulk import prospective homes from CSV files.
+                    </p>
+                  </div>
                 </div>
-                <p className="text-gray-600 leading-relaxed">
-                  Bulk import prospective homes from CSV files.
-                </p>
               </div>
             </Link>
           </div>
+        </div>
 
-          {/* Stats Section */}
-          <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-chs-deep-navy mb-4">
-              Quick Stats
-            </h3>
+        {/* Stats Section - Brand Enhanced */}
+        <div className="max-w-7xl mx-auto mt-8">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-chs-teal-green to-chs-bright-green rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-chs-deep-navy">
+                Performance Stats
+              </h3>
+            </div>
 
             {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chs-teal-green"></div>
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-chs-teal-green"></div>
               </div>
             ) : (
-              <>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mb-6">
-                  <div className="p-4 bg-gradient-to-br from-chs-teal-green/10 to-chs-teal-green/5 rounded-lg">
-                    <p className="text-3xl font-bold text-chs-teal-green">{stats.totalVisits}</p>
-                    <p className="text-sm text-gray-600 mt-1">Total Visits</p>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-chs-water-blue/10 to-chs-water-blue/5 rounded-lg">
-                    <p className="text-3xl font-bold text-chs-water-blue">{stats.thisWeek}</p>
-                    <p className="text-sm text-gray-600 mt-1">This Week</p>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-chs-bright-green/10 to-chs-bright-green/5 rounded-lg">
-                    <p className="text-3xl font-bold text-chs-bright-green">{stats.demosScheduled}</p>
-                    <p className="text-sm text-gray-600 mt-1">Demos Scheduled</p>
-                  </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="p-6 bg-gradient-to-br from-chs-teal-green/10 to-chs-teal-green/5 rounded-xl border-2 border-chs-teal-green/20 hover:border-chs-teal-green/40 transition-colors">
+                  <p className="text-4xl font-bold text-chs-teal-green mb-2">{stats.totalVisits}</p>
+                  <p className="text-sm font-medium text-gray-600">Total Visits</p>
                 </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center border-t pt-6">
-                  <div>
-                    <p className="text-2xl font-bold text-purple-600">{stats.followUps}</p>
-                    <p className="text-sm text-gray-600 mt-1">Pending Follow-ups</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-orange-600">{stats.conversionRate.toFixed(1)}%</p>
-                    <p className="text-sm text-gray-600 mt-1">Conversion Rate</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-indigo-600">{stats.topCity}</p>
-                    <p className="text-sm text-gray-600 mt-1">Top City</p>
-                  </div>
+                <div className="p-6 bg-gradient-to-br from-chs-water-blue/10 to-chs-water-blue/5 rounded-xl border-2 border-chs-water-blue/20 hover:border-chs-water-blue/40 transition-colors">
+                  <p className="text-4xl font-bold text-chs-water-blue mb-2">{stats.thisWeek}</p>
+                  <p className="text-sm font-medium text-gray-600">This Week</p>
                 </div>
-              </>
+                <div className="p-6 bg-gradient-to-br from-chs-bright-green/10 to-chs-bright-green/5 rounded-xl border-2 border-chs-bright-green/20 hover:border-chs-bright-green/40 transition-colors">
+                  <p className="text-4xl font-bold text-chs-bright-green mb-2">{stats.demosScheduled}</p>
+                  <p className="text-sm font-medium text-gray-600">Demos Set</p>
+                </div>
+                <div className="p-6 bg-gradient-to-br from-purple-100 to-purple-50 rounded-xl border-2 border-purple-200 hover:border-purple-300 transition-colors">
+                  <p className="text-4xl font-bold text-purple-600 mb-2">{stats.followUps}</p>
+                  <p className="text-sm font-medium text-gray-600">Follow-ups</p>
+                </div>
+                <div className="p-6 bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl border-2 border-orange-200 hover:border-orange-300 transition-colors">
+                  <p className="text-4xl font-bold text-orange-600 mb-2">{stats.conversionRate.toFixed(1)}%</p>
+                  <p className="text-sm font-medium text-gray-600">Convert Rate</p>
+                </div>
+                <div className="p-6 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-xl border-2 border-indigo-200 hover:border-indigo-300 transition-colors">
+                  <p className="text-2xl font-bold text-indigo-600 mb-2 truncate" title={stats.topCity}>{stats.topCity}</p>
+                  <p className="text-sm font-medium text-gray-600">Top City</p>
+                </div>
+              </div>
             )}
           </div>
+        </div>
 
-          {/* Daily Notes Section */}
-          <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-chs-deep-navy mb-4 flex items-center gap-2">
-              <svg className="w-6 h-6 text-chs-teal-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-              Daily Notes & Journal
-            </h3>
+        {/* Daily Notes Section - Brand Enhanced */}
+        <div className="max-w-7xl mx-auto mt-8 mb-10">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-chs-water-blue to-chs-deep-navy rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-chs-deep-navy">
+                Daily Notes & Journal
+              </h3>
+            </div>
 
             {/* Add Note Form */}
-            <div className="mb-6">
-              <div className="flex gap-2">
+            <div className="mb-8">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <textarea
                   value={newNote}
                   onChange={(e) => setNewNote(e.target.value)}
@@ -348,16 +409,16 @@ function Dashboard() {
                     }
                   }}
                   placeholder="Add a daily note, reminder, or observation... (Ctrl+Enter to save)"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chs-teal-green focus:border-transparent resize-none"
+                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-chs-teal-green focus:border-chs-teal-green transition-all resize-none"
                   rows={3}
                 />
                 <button
                   onClick={handleAddNote}
                   disabled={isAddingNote || !newNote.trim()}
-                  className="px-6 py-3 bg-chs-teal-green text-white rounded-lg hover:bg-chs-water-blue transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed h-fit"
+                  className="px-8 py-3 bg-gradient-to-r from-chs-teal-green to-chs-bright-green text-white rounded-xl hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed h-fit"
                 >
                   {isAddingNote ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-auto"></div>
                   ) : (
                     'Add Note'
                   )}
@@ -367,19 +428,22 @@ function Dashboard() {
 
             {/* Notes List */}
             {notes.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <p>No notes yet. Start by adding your first daily note above!</p>
+              <div className="text-center py-12 text-gray-500">
+                <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <p className="text-lg">No notes yet. Start by adding your first daily note above!</p>
               </div>
             ) : (
               <>
                 <div className="space-y-3">
                   {(showAllNotes ? notes : notes.slice(0, 5)).map((note) => (
-                    <div key={note.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-chs-teal-green transition-colors">
+                    <div key={note.id} className="p-5 bg-gradient-to-r from-gray-50 to-white rounded-xl border-2 border-gray-200 hover:border-chs-teal-green hover:shadow-md transition-all">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
-                          <p className="text-gray-800 whitespace-pre-wrap">{note.note}</p>
-                          <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">{note.note}</p>
+                          <p className="text-sm text-gray-500 mt-3 flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             {format(new Date(note.created_at), 'MMM dd, yyyy • h:mm a')}
@@ -387,7 +451,7 @@ function Dashboard() {
                         </div>
                         <button
                           onClick={() => handleDeleteNote(note.id)}
-                          className="text-red-500 hover:text-red-700 transition-colors p-1"
+                          className="text-red-400 hover:text-red-600 hover:bg-red-50 transition-all p-2 rounded-lg"
                           title="Delete note"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,7 +466,7 @@ function Dashboard() {
                 {notes.length > 5 && (
                   <button
                     onClick={() => setShowAllNotes(!showAllNotes)}
-                    className="mt-4 text-chs-water-blue hover:text-chs-teal-green font-medium text-sm flex items-center gap-1 mx-auto"
+                    className="mt-6 px-6 py-3 text-chs-water-blue hover:text-white hover:bg-chs-water-blue border-2 border-chs-water-blue rounded-xl font-semibold text-sm flex items-center gap-2 mx-auto transition-all"
                   >
                     {showAllNotes ? (
                       <>
