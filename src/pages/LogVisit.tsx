@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { supabase } from '../lib/supabase'
 import { geocodeAddress, getCurrentLocation } from '../lib/geocoding'
 import type { City, Subdivision, VisitResult } from '../types'
+import Footer from '../components/Footer'
 
 // Form validation schema
 const logVisitSchema = z.object({
@@ -302,7 +303,7 @@ function LogVisit() {
       {/* Header */}
       <header className="bg-chs-gradient shadow-lg">
         <div className="container mx-auto px-4 py-6 flex items-center justify-between">
-          <div>
+          <div className="text-center flex-1">
             <h1 className="text-3xl font-bold text-white">Log Visit</h1>
             <p className="text-white/90 mt-1">Record a new home visit</p>
           </div>
@@ -674,6 +675,8 @@ function LogVisit() {
           </div>
         </div>
       )}
+
+      <Footer />
     </div>
   )
 }

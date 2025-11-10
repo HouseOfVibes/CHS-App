@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Map from '../components/Map'
 import type { Home, City, Subdivision, VisitResult } from '../types'
+import Footer from '../components/Footer'
 
 interface HomeWithRelations extends Home {
   cities?: City
@@ -100,7 +101,7 @@ function MapView() {
       {/* Header */}
       <header className="bg-chs-gradient shadow-lg">
         <div className="container mx-auto px-4 py-6 flex items-center justify-between">
-          <div>
+          <div className="text-center flex-1">
             <h1 className="text-3xl font-bold text-white">Map View</h1>
             <p className="text-white/90 mt-1">View home visits on map</p>
           </div>
@@ -230,6 +231,8 @@ function MapView() {
           )}
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import { format, startOfWeek, endOfWeek } from 'date-fns'
 import type { AdminNote } from '../types'
+import Footer from '../components/Footer'
 
 interface DashboardStats {
   totalVisits: number
@@ -162,7 +163,7 @@ function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-chs-light-aqua via-white to-chs-light-gray">
       {/* Header */}
       <header className="bg-chs-gradient shadow-lg">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 py-6 text-center">
           <h1 className="text-3xl font-bold text-white">
             Continental Home Solutions
           </h1>
@@ -490,6 +491,8 @@ function Dashboard() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }

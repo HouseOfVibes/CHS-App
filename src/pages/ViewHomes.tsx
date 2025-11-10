@@ -5,6 +5,7 @@ import type { Home, City, Subdivision, VisitResult } from '../types'
 import { format } from 'date-fns'
 import { exportToCSV, exportToJSON } from '../lib/export'
 import { openDirections } from '../lib/directions'
+import Footer from '../components/Footer'
 
 interface HomeWithRelations extends Home {
   cities?: City
@@ -168,7 +169,7 @@ function ViewHomes() {
       {/* Header */}
       <header className="bg-chs-gradient shadow-lg">
         <div className="container mx-auto px-4 py-6 flex items-center justify-between">
-          <div>
+          <div className="text-center flex-1">
             <h1 className="text-3xl font-bold text-white">View Homes</h1>
             <p className="text-white/90 mt-1">Browse and filter logged visits</p>
           </div>
@@ -523,6 +524,8 @@ function ViewHomes() {
           )}
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }

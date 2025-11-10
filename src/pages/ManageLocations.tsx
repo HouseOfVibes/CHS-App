@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import type { City, Subdivision } from '../types'
+import Footer from '../components/Footer'
 
 interface SubdivisionWithCity extends Subdivision {
   cities?: City
@@ -141,7 +142,7 @@ function ManageLocations() {
       {/* Header */}
       <header className="bg-chs-gradient shadow-lg">
         <div className="container mx-auto px-4 py-6 flex items-center justify-between">
-          <div>
+          <div className="text-center flex-1">
             <h1 className="text-3xl font-bold text-white">Manage Locations</h1>
             <p className="text-white/90 mt-1">Add, edit, and organize cities and subdivisions</p>
           </div>
@@ -336,6 +337,8 @@ function ManageLocations() {
           </div>
         </div>
       )}
+
+      <Footer />
     </div>
   )
 }

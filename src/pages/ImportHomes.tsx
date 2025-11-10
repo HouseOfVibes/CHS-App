@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Footer from '../components/Footer'
 
 interface ParsedHome {
   address: string
@@ -187,7 +188,7 @@ function ImportHomes() {
       {/* Header */}
       <header className="bg-chs-gradient shadow-lg">
         <div className="container mx-auto px-4 py-6 flex items-center justify-between">
-          <div>
+          <div className="text-center flex-1">
             <h1 className="text-3xl font-bold text-white">Import Homes</h1>
             <p className="text-white/90 mt-1">Bulk import prospective homes from CSV</p>
           </div>
@@ -338,6 +339,8 @@ function ImportHomes() {
           )}
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }
