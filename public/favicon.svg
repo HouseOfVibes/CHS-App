@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#002B49;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0079A3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00A86B;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#brandGradient)"/>
+
+  <!-- House icon -->
+  <path d="M 30 55 L 30 75 L 45 75 L 45 60 L 55 60 L 55 75 L 70 75 L 70 55"
+        fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M 25 50 L 50 30 L 75 50"
+        fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="60" y="40" width="6" height="8" fill="white" rx="1"/>
+
+  <!-- Small CHS text -->
+  <text x="50" y="90" font-family="Arial, sans-serif" font-size="12" font-weight="bold"
+        fill="white" text-anchor="middle">CHS</text>
+</svg>
